@@ -14,7 +14,7 @@ The following figure illustrates the overall architecture of FLEX, instantiated 
 .. image:: images/flex_sr.png
     :width: 800px
 
-See our paper on arXiv (https://arxiv.org/abs/2505.17351) for full details.
+See our paper on `arXiv <https://arxiv.org/abs/2505.17351>` for full details.
 
 ---------------------------
 Architectural Highlights
@@ -43,6 +43,5 @@ To train a new single-task model for both super-resolution, use:
     python train.py --run-name flex_small --superres_factor 4 --prediction-type v
 
 
-You can download data here: [Google Drive](https://drive.google.com/drive/folders/1w3kmlXLxu6wTXmEZrX2m1R9RQGr45gTE?usp=sharing).
-
+You can download data here: `Google Drive <https://drive.google.com/drive/folders/1w3kmlXLxu6wTXmEZrX2m1R9RQGr45gTE?usp=sharing>`_.
 
