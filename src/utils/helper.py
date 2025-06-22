@@ -64,15 +64,23 @@ def load_model(path, image_size, model_size, reverse_steps=1, prediction_type='v
     )
     
     # load checkpoint onto the same device
-    checkpoint = torch.load(path, map_location=device)
-    
-    model.encoder.load_state_dict(checkpoint["encoder"])
-    model.superres_encoder.load_state_dict(checkpoint["superres_encoder"])
-    model.decoder.load_state_dict(checkpoint["decoder"])
-    
-    # set up EMA; the parameters are already on CPU or GPU as appropriate
-    ema = ExponentialMovingAverage(model.parameters(), decay=0.999)
-    ema.load_state_dict(checkpoint["ema"])
+    try:
+        with open(path, 'rb') as f:
+            print(f'Checkpoint loaded from {path}')
+            checkpoint = torch.load(f, map_location=device, weights_only=True)
+            model.encoder.load_state_dict(checkpoint["encoder"])
+            model.superres_encoder.load_state_dict(checkpoint["superres_encoder"])
+            model.decoder.load_state_dict(checkpoint["decoder"])
+            # set up EMA; the parameters are already on CPU or GPU as appropriate
+            ema = ExponentialMovingAverage(model.parameters(), decay=0.999)
+            ema.load_state_dict(checkpoint["ema"])
+    except (TypeError, FileNotFoundError, OSError):
+        print('Loading untrained model from initialization')
+        ema = ExponentialMovingAverage(model.parameters(), decay=0.999)
+        
+    # # set up EMA; the parameters are already on CPU or GPU as appropriate
+    # ema = ExponentialMovingAverage(model.parameters(), decay=0.999)
+    # ema.load_state_dict(checkpoint["ema"])
     
     
     # Only compile on GPU

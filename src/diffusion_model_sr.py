@@ -283,7 +283,7 @@ class DiffusionModel(nn.Module):
             # -----------------------------------------------------------
             # 1.4 DDIM update (deterministic if η = 0) ----------------
             # -----------------------------------------------------------
-            eta = 0.01  # 0 → DDIM   |   1 → DDPM (full noise)
+            eta = 0.0  # 0 → DDIM   |   1 → DDPM (full noise)
             noise = torch.randn_like(snapshots_i) if eta > 0 else 0.0
             snapshots_i = alpha_ * mean + sigma_ * eps + eta * sigma_ * noise
 
