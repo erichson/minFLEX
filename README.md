@@ -70,7 +70,7 @@ To begin model training, request an interactive GPU session on NERSC using the f
 
 
 The maximum allowed time for an interactive session is 4 hours.  
-Please refer to the [NERSC Interactive Job documentation](https://docs.nersc.gov/jobs/interactive/) for more detailed introduction.
+Please refer to the `NERSC Interactive Job documentation <https://docs.nersc.gov/jobs/interactive/>`_ for more detailed introduction.
 
 Once the session starts, you can verify the assigned GPUs with:
 
@@ -103,12 +103,15 @@ You can download the data and pretrained FLEX checkpoints here: `Google Drive <h
 
 Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/minFLEX`:
 
-    minFLEX
-    ├── checkpoints
-    │   ├── checkpoint_ERA5_flex_small_eps_200.pt
-    │   └── checkpoint_ERA5_flex_small_v_200.pt
-    └── data
-        └── 2013_subregion.h5
+<pre>
+minFLEX
+├── checkpoints
+│   ├── checkpoint_ERA5_flex_small_eps_200.pt
+│   └── checkpoint_ERA5_flex_small_v_200.pt
+└── data
+    └── 2013_subregion.h5
+</pre>
+
 
 - `checkpoint_ERA5_flex_small_eps_200.pt`: model trained to predict the noise (ε)
 - `checkpoint_ERA5_flex_small_v_200.pt`: model trained to predict the velocity parameter (v)
@@ -116,6 +119,6 @@ Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/min
 Evaluation Instructions
 -----------------------------
 
-Trained models can be evaluated using the `eval.ipynb` notebook. To access a GPU-enabled Jupyter notebook on NERSC, visit: [jupyter.nersc.gov](https://jupyter.nersc.gov/hub/home)
+Trained models can be evaluated using the `eval.ipynb` notebook. To access a GPU-enabled Jupyter notebook on NERSC, visit: `jupyter.nersc.gov <https://jupyter.nersc.gov/hub/home>`_.
 
 After logging in, choose the **login node** option when prompted, and select the 'pytorch-2.6.0' **kernel** before running the notebook.
