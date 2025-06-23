@@ -66,10 +66,10 @@ Environment Setup on NERSC
 To begin model training, request an interactive GPU session on NERSC using the following command::
 
 
-    salloc --nodes 1 --qos interactive --time 04:00:00 --constraint gpu --gpus 4 --account=trn011 --reservation=dl4sci_school
+    salloc --nodes 1 --qos interactive -t 90 -C gpu -A trn011 --reservation=dl4sci_school
 
 
-The maximum allowed time for an interactive session is 4 hours.  
+The maximum allowed time for an interactive session is 90 mintues for the summer school session.  
 Please refer to the `NERSC Interactive Job documentation <https://docs.nersc.gov/jobs/interactive/>`_ for more detailed introduction.
 
 Once the session starts, you can verify the assigned GPUs with::
