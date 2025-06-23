@@ -37,7 +37,8 @@ Architectural Highlights
 Training Instructions
 -----------------------------
 
-#### Task Description
+Task Description   
+----------------
 
 Given a coarse ERA5 snapshot of atmospheric kinetic energy density (KE), the objective is to **reconstruct** the fine-scale structure through super-resolution by a factor of **×4** or **×8**, while maintaining physical realism.
 
@@ -48,16 +49,15 @@ Given a coarse ERA5 snapshot of atmospheric kinetic energy density (KE), the obj
 
 Since global snapshots are too large to process directly, this tutorial focuses on super-resolving subregions. We train the model on regions of the global map and evaluate it over a selected area in the North Pacific, as indicated by the white box in the coarse-resolution snapshot above.
 
-
-#### Why do we need super-resolution for climate data?
+Why do we need super-resolution for climate data?     
+----------------
 
 * **ERA5 is global but chunky** – a typical 0.25° grid smooths over storms, jets and valley winds.  
 * **High-resolution simulations are expensive** – a year of 0.03° LES costs months on a super-computer.  
 * **Downscaling bridges the gap** – we learn a mapping from *coarse* to *fine* grids, giving researchers a “microscope” for climate.
-
-
-
-#### Environment Setup on NERSC
+   
+Environment Setup on NERSC  
+----------------
 
 **1.** Start by cloning the tutorial repository to your NERSC home directory:
 
@@ -80,10 +80,10 @@ Once the session starts, you can verify the assigned GPUs with:
 
 Instead of creating a new virtual environment, it's recommended to use the shared PyTorch module available on the cluster:
 
-    module load pytorch #Default version is 2.6.0
-    pip install --user pytorch_ema
-    pip install --user diffusers
-    pip install --user eniops
+    module load pytorch #Default version is 2.6.0      
+    pip install --user pytorch_ema      
+    pip install --user diffusers     
+    pip install --user eniops    
 
 Be sure to include the `--user` flag with `pip install` to avoid installing packages globally on cluster.
 
@@ -103,14 +103,12 @@ You can download the data and pretrained FLEX checkpoints here: `Google Drive <h
 
 Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/minFLEX`:
 
-<pre>
-minFLEX
-├── checkpoints
-│   ├── checkpoint_ERA5_flex_small_eps_200.pt
-│   └── checkpoint_ERA5_flex_small_v_200.pt
-└── data
-    └── 2013_subregion.h5
-</pre>
+    minFLEX
+    ├── checkpoints
+    │   ├── checkpoint_ERA5_flex_small_eps_200.pt
+    │   └── checkpoint_ERA5_flex_small_v_200.pt
+    └── data
+        └── 2013_subregion.h5
 
 
 - `checkpoint_ERA5_flex_small_eps_200.pt`: model trained to predict the noise (ε)
@@ -119,6 +117,6 @@ minFLEX
 Evaluation Instructions
 -----------------------------
 
-Trained models can be evaluated using the `eval.ipynb` notebook. To access a GPU-enabled Jupyter notebook on NERSC, visit: `jupyter.nersc.gov <https://jupyter.nersc.gov/hub/home>`_.
+Trained models can be evaluated using the `eval.ipynb` notebook. To access a GPU-enabled Jupyter notebook on NERSC, visit `jupyter.nersc.gov <https://jupyter.nersc.gov/hub/home>`_.
 
 After logging in, choose the **login node** option when prompted, and select the 'pytorch-2.6.0' **kernel** before running the notebook.
