@@ -15,6 +15,8 @@ from src.diffusion_model_sr import DiffusionModel
 from torch.utils.data import Dataset, DataLoader
 from torch_ema import ExponentialMovingAverage
 
+from numpy.typing import ArrayLike
+
 
 def stich(input, res=128, target_res=256):
     X = np.zeros((target_res,target_res))
@@ -256,4 +258,53 @@ def plot_pull(
 
     return float(mu_hat), float(sigma_hat)
 
+
+def _azimuthal_average(psd2d: ArrayLike,
+                       center: tuple[int, int] | None = None,
+                       nbins: int | None = None
+                       ) -> tuple[np.ndarray, np.ndarray]:
+    h, w = psd2d.shape
+    cy, cx = center or (h // 2, w // 2)
+    y, x = np.indices((h, w))
+    r = np.hypot(x - cx, y - cy)
+
+    max_r = min(h, w) / 2              # Nyquist radius
+    nbins = nbins or int(np.ceil(max_r))
+    bin_edges = np.linspace(0.0, max_r, nbins + 1)
+
+    psd_radial = np.empty(nbins)
+    for k in range(nbins):
+        mask = (r >= bin_edges[k]) & (r < bin_edges[k + 1])
+        psd_radial[k] = psd2d[mask].mean() if mask.any() else np.nan
+
+    freq = 0.5 * (bin_edges[:-1] + bin_edges[1:]) / max_r  # f / f_Nyq in [0, 1]
+    return freq, psd_radial
+
+def compute_reduced_spectrum(field: ArrayLike,
+                             nbins: int | None = None
+                             ) -> tuple[np.ndarray, np.ndarray]:
+    window = np.hanning(field.shape[0])[:, None] * np.hanning(field.shape[1])[None, :]
+    f2d = np.fft.fftshift(np.fft.fft2(field * window))
+    psd2d = np.abs(f2d) ** 2
+    return _azimuthal_average(psd2d, nbins=nbins)
+
+def plot_reduced_spectrum(truth: ArrayLike,
+                          pred: ArrayLike,
+                          nbins: int | None = None) -> None:
+    f,  psd  = compute_reduced_spectrum(truth, nbins)
+    f2, psd2 = compute_reduced_spectrum(pred,  nbins)
+
+    plt.figure(figsize=(5,5))
+    plt.plot(f, psd,  label="ground truth", c='gray', lw=6)
+    plt.plot(f2, psd2, label="prediction (model 1)", c='#f03b20')
+
+    plt.xlabel("Normalized frequency $f / f_{Nyq}$")
+    plt.ylabel("Power spectral density")
+    #plt.title("Isotropic PSD comparison")
+    plt.yscale('log')
+    plt.grid(True, which="both", ls="--", alpha=0.4)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+    
     
