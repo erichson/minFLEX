@@ -90,7 +90,7 @@ Be sure to include the ``--user`` flag with ``pip install`` to avoid installing 
 
 **3.** To train a new single-task model for super-resolution, run::
 
-    python train.py --run-name flex_small --superres_factor 4 --prediction-type v
+    python train.py --run-name flex_small --superres_factor 4 --prediction-type v --reservation=dl4sci_school
 
 
 - The checkpoint will be saved automatically at: ``checkpoints/checkpoint_ERA5_flex_small.pt``
