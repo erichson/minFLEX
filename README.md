@@ -81,9 +81,9 @@ Once the session starts, you can verify the assigned GPUs with::
 Instead of creating a new virtual environment, it's recommended to use the shared PyTorch module available on the cluster::
 
     module load pytorch #Default version is 2.6.0      
-    pip install --user pytorch_ema      
+    pip install --user torch-ema      
     pip install --user diffusers     
-    pip install --user eniops    
+    pip install --user einops        
 
 Be sure to include the `--user` flag with `pip install` to avoid installing packages globally on cluster.
 
