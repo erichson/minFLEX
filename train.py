@@ -456,6 +456,7 @@ if __name__ == "__main__":
     # Diffusion
     parser.add_argument("--prediction-type", type=str, default='v')
     parser.add_argument("--time-steps", type=int, default=2)
+    parser.add_argument("--use_wandb", type=int, default=0)
 
     # Multi-node
     parser.add_argument("--multi-node", action='store_true', default=False)
@@ -466,18 +467,21 @@ if __name__ == "__main__":
     np.random.seed(1)
 
     # ---- WANDB session -----------------------------------------------------------------
-    wandb.login()
-    run = wandb.init(
-        project="FLEX4" if args.multi_node else "FLEX",
-        name=args.run_name,
-        # mode="disabled",  # uncomment for offline
-        config={
-            "learning_rate": args.learning_rate,
-            "epochs": args.epochs,
-            "batch size": args.batch_size,
-            "upsampling factor": args.superres_factor,
-        },
-    )
+    if args.use_wandb == 0:
+        run=None
+    else:
+        wandb.login()
+        run = wandb.init(
+            project="FLEX4" if args.multi_node else "FLEX",
+            name=args.run_name,
+            # mode="disabled",  # uncomment for offline
+            config={
+                "learning_rate": args.learning_rate,
+                "epochs": args.epochs,
+                "batch size": args.batch_size,
+                "upsampling factor": args.superres_factor,
+            },
+        )
 
     # ---- Launch ­-----------------------------------------------------------------------
     if args.multi_node:

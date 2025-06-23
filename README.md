@@ -37,11 +37,83 @@ Architectural Highlights
 Training Instructions
 -----------------------------
 
+#### Task Description
 
-To train a new single-task model for both super-resolution, use:
+Given a coarse ERA5 snapshot of atmospheric _kinetic energy density_ (KE), the objective is to **reconstruct** the fine-scale structure through super-resolution by a factor of **×4** or **×8**, while maintaining physical realism.
+
+<div style="text-align: center;">
+  <img src="full_image.png" alt="Full Image" width="750"/>
+</div>
+
+Since global snapshots are too large to process directly, this tutorial focuses on super-resolving subregions. We train the model on regions of the global map and evaluate it over a selected area in the North Pacific, as indicated by the white box in the coarse-resolution snapshot above.
+
+
+#### Why do we need super-resolution for climate data?
+
+* **ERA5 is global but chunky** – a typical 0.25° grid smooths over storms, jets and valley winds.  
+* **High-resolution simulations are expensive** – a year of 0.03° LES costs months on a super-computer.  
+* **Downscaling bridges the gap** – we learn a mapping from *coarse* to *fine* grids, giving researchers a “microscope” for climate.
+
+
+
+#### Environment Setup on NERSC
+
+**1.** Start by cloning the tutorial repository to your NERSC home directory:
+```
+git clone https://github.com/erichson/minFLEX.git
+```
+
+To begin model training, request an interactive GPU session on NERSC using the following command:
+```
+salloc --nodes 1 --qos interactive --time 04:00:00 --constraint gpu --gpus 4 --account=trn011_g
+```
+The maximum allowed time for an interactive session is 4 hours.  
+Please refer to the [NERSC Interactive Job documentation](https://docs.nersc.gov/jobs/interactive/) for more detailed introduction.
+
+Once the session starts, you can verify the assigned GPUs with:
+```
+nvidia-smi
+```
+**2.** Load environment for training. 
+
+Instead of creating a new virtual environment, it's recommended to use the shared PyTorch module available on the cluster:
+```
+module load pytorch #Default one is 2.6.0
+pip install --user pytorch_ema
+pip install --user diffusers
+pip install --user eniops
+```
+Be sure to include the `--user` flag with `pip install` to avoid installing packages globally on cluster.
+
+
+**3.** To train a new single-task model for super-resolution, run:
 
     python train.py --run-name flex_small --superres_factor 4 --prediction-type v
 
 
+- The checkpoint will be saved automatically at: `checkpoints/checkpoint_ERA5_flex_small.pt`
+- Weights & Biases (wandb) logging is disabled by default. To enable it, add the argument: `--use_wandb 1`
+- The training script uses Distributed Data Parallel (DDP) and will automatically utilize all GPUs on the allocated node.  
+  When running on 4 A100 GPUs, one epoch typically completes in approximately 50 seconds.
+
+
 You can download the data and pretrained FLEX checkpoints here: `Google Drive <https://drive.google.com/drive/folders/1w3kmlXLxu6wTXmEZrX2m1R9RQGr45gTE?usp=sharing>`_.
 
+Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/minFLEX`:
+```
+minFLEX
+├── checkpoints
+│   ├── checkpoint_ERA5_flex_small_eps_200.pt
+│   └── checkpoint_ERA5_flex_small_v_200.pt
+└── data
+    └── 2013_subregion.h5
+```
+- `checkpoint_ERA5_flex_small_eps_200.pt`: model trained to predict the noise (ε)
+- `checkpoint_ERA5_flex_small_v_200.pt`: model trained to predict the velocity parameter (v)
+-----------------------------
+Evaluation Instructions
+-----------------------------
+
+Trained models can be evaluated using the `eval.ipynb` notebook. To access a GPU-enabled Jupyter notebook on NERSC, visit: [jupyter.nersc.gov](https://jupyter.nersc.gov/hub/home)
+
+After logging in, choose the **login node** option when prompted, and select the 'pytorch-2.6.0' **kernel** before running the notebook.
