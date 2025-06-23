@@ -66,7 +66,7 @@ Environment Setup on NERSC
 To begin model training, request an interactive GPU session on NERSC using the following command::
 
 
-    salloc --nodes 1 --qos interactive --time 04:00:00 --constraint gpu --gpus 4 --account=trn011_g
+    salloc --nodes 1 --qos interactive --time 04:00:00 --constraint gpu --gpus 4 --account=trn011 --reservation=dl4sci_school
 
 
 The maximum allowed time for an interactive session is 4 hours.  
@@ -90,7 +90,7 @@ Be sure to include the ``--user`` flag with ``pip install`` to avoid installing 
 
 **3.** To train a new single-task model for super-resolution, run::
 
-    python train.py --run-name flex_small --superres_factor 4 --prediction-type v --reservation=dl4sci_school
+    python train.py --run-name flex_small --superres_factor 4 --prediction-type v   
 
 
 - The checkpoint will be saved automatically at: ``checkpoints/checkpoint_ERA5_flex_small.pt``
