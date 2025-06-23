@@ -39,11 +39,12 @@ Training Instructions
 
 #### Task Description
 
-Given a coarse ERA5 snapshot of atmospheric _kinetic energy density_ (KE), the objective is to **reconstruct** the fine-scale structure through super-resolution by a factor of **×4** or **×8**, while maintaining physical realism.
+Given a coarse ERA5 snapshot of atmospheric kinetic energy density (KE), the objective is to **reconstruct** the fine-scale structure through super-resolution by a factor of **×4** or **×8**, while maintaining physical realism.
 
-<div style="text-align: center;">
-  <img src="full_image.png" alt="Full Image" width="750"/>
-</div>
+.. image:: full_image.png
+    :width: 750px
+    :align: center
+    :alt: Full Image
 
 Since global snapshots are too large to process directly, this tutorial focuses on super-resolving subregions. We train the model on regions of the global map and evaluate it over a selected area in the North Pacific, as indicated by the white box in the coarse-resolution snapshot above.
 
@@ -59,30 +60,31 @@ Since global snapshots are too large to process directly, this tutorial focuses 
 #### Environment Setup on NERSC
 
 **1.** Start by cloning the tutorial repository to your NERSC home directory:
-```
-git clone https://github.com/erichson/minFLEX.git
-```
+
+    git clone https://github.com/erichson/minFLEX.git
 
 To begin model training, request an interactive GPU session on NERSC using the following command:
-```
-salloc --nodes 1 --qos interactive --time 04:00:00 --constraint gpu --gpus 4 --account=trn011_g
-```
+
+
+    salloc --nodes 1 --qos interactive --time 04:00:00 --constraint gpu --gpus 4 --account=trn011_g
+
+
 The maximum allowed time for an interactive session is 4 hours.  
 Please refer to the [NERSC Interactive Job documentation](https://docs.nersc.gov/jobs/interactive/) for more detailed introduction.
 
 Once the session starts, you can verify the assigned GPUs with:
-```
-nvidia-smi
-```
+
+    nvidia-smi
+
 **2.** Load environment for training. 
 
 Instead of creating a new virtual environment, it's recommended to use the shared PyTorch module available on the cluster:
-```
-module load pytorch #Default one is 2.6.0
-pip install --user pytorch_ema
-pip install --user diffusers
-pip install --user eniops
-```
+
+    module load pytorch #Default version is 2.6.0
+    pip install --user pytorch_ema
+    pip install --user diffusers
+    pip install --user eniops
+
 Be sure to include the `--user` flag with `pip install` to avoid installing packages globally on cluster.
 
 
@@ -100,14 +102,14 @@ Be sure to include the `--user` flag with `pip install` to avoid installing pack
 You can download the data and pretrained FLEX checkpoints here: `Google Drive <https://drive.google.com/drive/folders/1w3kmlXLxu6wTXmEZrX2m1R9RQGr45gTE?usp=sharing>`_.
 
 Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/minFLEX`:
-```
-minFLEX
-├── checkpoints
-│   ├── checkpoint_ERA5_flex_small_eps_200.pt
-│   └── checkpoint_ERA5_flex_small_v_200.pt
-└── data
-    └── 2013_subregion.h5
-```
+
+    minFLEX
+    ├── checkpoints
+    │   ├── checkpoint_ERA5_flex_small_eps_200.pt
+    │   └── checkpoint_ERA5_flex_small_v_200.pt
+    └── data
+        └── 2013_subregion.h5
+
 - `checkpoint_ERA5_flex_small_eps_200.pt`: model trained to predict the noise (ε)
 - `checkpoint_ERA5_flex_small_v_200.pt`: model trained to predict the velocity parameter (v)
 -----------------------------
