@@ -59,11 +59,11 @@ Why do we need super-resolution for climate data?
 Environment Setup on NERSC  
 ----------------
 
-**1.** Start by cloning the tutorial repository to your NERSC home directory:
+**1.** Start by cloning the tutorial repository to your NERSC home directory::
 
     git clone https://github.com/erichson/minFLEX.git
 
-To begin model training, request an interactive GPU session on NERSC using the following command:
+To begin model training, request an interactive GPU session on NERSC using the following command::
 
 
     salloc --nodes 1 --qos interactive --time 04:00:00 --constraint gpu --gpus 4 --account=trn011_g
@@ -88,7 +88,7 @@ Instead of creating a new virtual environment, it's recommended to use the share
 Be sure to include the `--user` flag with `pip install` to avoid installing packages globally on cluster.
 
 
-**3.** To train a new single-task model for super-resolution, run:
+**3.** To train a new single-task model for super-resolution, run::
 
     python train.py --run-name flex_small --superres_factor 4 --prediction-type v
 
