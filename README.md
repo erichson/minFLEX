@@ -85,7 +85,7 @@ Instead of creating a new virtual environment, it's recommended to use the share
     pip install --user diffusers     
     pip install --user einops        
 
-Be sure to include the `--user` flag with `pip install` to avoid installing packages globally on cluster.
+Be sure to include the ``--user`` flag with ``pip install`` to avoid installing packages globally on cluster.
 
 
 **3.** To train a new single-task model for super-resolution, run::
@@ -93,15 +93,15 @@ Be sure to include the `--user` flag with `pip install` to avoid installing pack
     python train.py --run-name flex_small --superres_factor 4 --prediction-type v
 
 
-- The checkpoint will be saved automatically at: `checkpoints/checkpoint_ERA5_flex_small.pt`
-- Weights & Biases (wandb) logging is disabled by default. To enable it, add the argument: `--use_wandb 1`
+- The checkpoint will be saved automatically at: ``checkpoints/checkpoint_ERA5_flex_small.pt``
+- Weights & Biases (wandb) logging is disabled by default. To enable it, add the argument: ``--use_wandb 1``
 - The training script uses Distributed Data Parallel (DDP) and will automatically utilize all GPUs on the allocated node.  
   When running on 4 A100 GPUs, one epoch typically completes in approximately 50 seconds.
 
 
 You can download the data and pretrained FLEX checkpoints here: `Google Drive <https://drive.google.com/drive/folders/1w3kmlXLxu6wTXmEZrX2m1R9RQGr45gTE?usp=sharing>`_.
 
-Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/minFLEX`::
+Alternatively, data are also available on NERSC at ``/global/cfs/cdirs/trn011/minFLEX``::
 
     minFLEX
     ├── checkpoints
@@ -112,8 +112,8 @@ Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/min
 
 
 
-- `checkpoint_ERA5_flex_small_eps_200.pt`: model trained to predict the noise (ε)
-- `checkpoint_ERA5_flex_small_v_200.pt`: model trained to predict the velocity parameter (v)
+- ``checkpoint_ERA5_flex_small_eps_200.pt``: model trained to predict the noise (ε)
+- ``checkpoint_ERA5_flex_small_v_200.pt``: model trained to predict the velocity parameter (v)
 -----------------------------
 Evaluation Instructions
 -----------------------------
