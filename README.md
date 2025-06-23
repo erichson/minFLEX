@@ -78,7 +78,7 @@ Once the session starts, you can verify the assigned GPUs with:
 
 **2.** Load environment for training. 
 
-Instead of creating a new virtual environment, it's recommended to use the shared PyTorch module available on the cluster:
+Instead of creating a new virtual environment, it's recommended to use the shared PyTorch module available on the cluster::
 
     module load pytorch #Default version is 2.6.0      
     pip install --user pytorch_ema      
@@ -101,7 +101,7 @@ Be sure to include the `--user` flag with `pip install` to avoid installing pack
 
 You can download the data and pretrained FLEX checkpoints here: `Google Drive <https://drive.google.com/drive/folders/1w3kmlXLxu6wTXmEZrX2m1R9RQGr45gTE?usp=sharing>`_.
 
-Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/minFLEX`:
+Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/minFLEX`::
 
     minFLEX
     ├── checkpoints
@@ -109,6 +109,7 @@ Alternatively, data are also available on NERSC at `/global/cfs/cdirs/trn011/min
     │   └── checkpoint_ERA5_flex_small_v_200.pt
     └── data
         └── 2013_subregion.h5
+
 
 
 - `checkpoint_ERA5_flex_small_eps_200.pt`: model trained to predict the noise (ε)
