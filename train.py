@@ -70,7 +70,7 @@ def ddp_setup(local_rank: int, world_size: int) -> tuple[int, int]:
 # ════════════════════════════════════════════════════════════════════════════════════════
 class Trainer:
     """
-    Encapsulates one training *driver* that lives on a **single rank**.
+    Encapsulates one training *driver* that lives on a single rank.
 
     Responsibilities
     ---------------
@@ -337,7 +337,7 @@ class Trainer:
                     self.run.log({
                         "train_loss": float(self.logs['train_loss']),
                         "val_loss":   float(self.logs['val_loss']),
-                        **({"RFNE": float(self.logs['RFNE'])}
+                        ({"RFNE": float(self.logs['RFNE'])}
                            if 'RFNE' in self.logs else {})
                     })
 

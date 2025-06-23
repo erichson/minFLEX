@@ -25,22 +25,20 @@ def logsnr_schedule_cosine(
     logsnr_max: float = 20.0,
     shift: float = 1.0,
 ) -> torch.Tensor:
-    """Cosine log‑SNR schedule from *Nichol & Dhariwal (2021)* with optional *shift*.
+    """Cosine log‑SNR schedule from Nichol & Dhariwal (2021) with optional shift.
 
-    This schedule maps a *normalised* continuous time‐step *t∈[0,1]* to the **log‑signal‑
-    to‑noise‑ratio** (log‑SNR) used in diffusion models.  The closed‑form expression below
-    is derived from the original paper; the *shift* parameter is retained solely for
-    backward‑compatibility with older checkpoints – setting it to values ≠ 1.0 will *scale*
-    the resulting schedule but will **not** change its shape.
+    This schedule maps a normalised continuous time‐step t∈[0,1] to the log‑signal‑
+    to‑noise‑ratio (log‑SNR) used in diffusion models.  The closed‑form expression below
+    is derived from the original paper;
 
     Args:
-        t: Normalised time in **[0, 1]**; arbitrary leading dimensions are allowed, but
-           shape *(batch,)* is most common.
+        t: Normalised time in [0, 1]; arbitrary leading dimensions are allowed, but
+           shape (batch,) is most common.
         logsnr_min / logsnr_max: Lower/upper bounds of the log‑SNR range.
         shift: Scalar multiplier that uniformly shifts the curve along the vertical axis.
 
     Returns:
-        logsnr: Tensor with the same leading dimensions as *t* containing log‑SNR values.
+        logsnr: Tensor with the same leading dimensions as t containing log‑SNR values.
     """
     # The transformation below is numerically stable for the specified default range.
     b = torch.atan(torch.exp(-0.5 * torch.tensor(logsnr_max)))
@@ -48,17 +46,17 @@ def logsnr_schedule_cosine(
     return -2.0 * torch.log(torch.tan(a * t + b) * shift)
 
 
-# Wrapper that additionally provides *α* and *σ* — the square‑rooted signal/noise weights
+# Wrapper that additionally provides α and σ — the square‑rooted signal/noise weights
 # used by most modern parameterisations (x₀, ε, or v) -----------------------------------
 
 def get_logsnr_alpha_sigma(
     time: torch.Tensor,
     shift: float = 16.0,  # NOTE: 16.0 follows the "imagen" implementation; set to 1.0 to match
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    """Return `(logsnr, α, σ)` broadcastable to **(B, 1, 1, 1)**.
+    """Return `(logsnr, α, σ)` broadcastable to (B, 1, 1, 1).
 
-    The helper expands the 1‑D *time* tensor into per‑sample log‑SNR plus its derived
-    coefficients *α* and *σ* such that subsequent point‑wise arithmetic broadcasts cleanly
+    The helper expands the 1‑D time tensor into per‑sample log‑SNR plus its derived
+    coefficients α and σ such that subsequent point‑wise arithmetic broadcasts cleanly
     over spatial dimensions.
     """
     logsnr = logsnr_schedule_cosine(time, shift=shift)[:, None, None, None]
@@ -73,15 +71,15 @@ def get_logsnr_alpha_sigma(
 
 
 class DiffusionModel(nn.Module):
-    """U‑Net‑style *conditional* diffusion model with an auxiliary super‑resolution head.
+    """U‑Net‑style conditional diffusion model with an auxiliary super‑resolution head.
 
     The network is conceptually split into three parts:
 
-    1. **Super‑resolution encoder** – extracts low‑resolution features (skip connections)
+    1. Super‑resolution encoder – extracts low‑resolution features (skip connections)
        from the input *conditioning* frames.
-    2. **Main encoder (U‑Net)** – processes the *noisy* residual (xₜ) together with the
-       conditioning features and the diffusion timestep *t*.
-    3. **Decoder** – merges both streams and predicts either **x₀**, **ε**, or **v**
+    2. Main encoder (U‑Net) – processes the noisy residual together with the
+       conditioning features and the diffusion timestep t.
+    3. Decoder – merges both streams and predicts either x, ε, or v
        depending on *prediction_type*.
 
     Notes
@@ -134,14 +132,14 @@ class DiffusionModel(nn.Module):
         snapshots: torch.Tensor,
         fluid_condition: torch.Tensor,
     ) -> torch.Tensor:
-        """Compute **per‑pixel loss** for a *single random* diffusion timestep.
+        """Compute per‑pixel loss for a *single random* diffusion timestep.
 
         The routine implements the standard diffusion training recipe:
 
-        1. **Sample** a random timestep *t*.
-        2. **Diffuse** the target residual x₀ → xₜ using Gaussian noise ε.
-        3. **Predict** a target (x₀/ε/v) with the network.
-        4. **Return** the per‑pixel loss so callers can decide on the reduction.
+        1. Sample a random timestep t.
+        2. Diffuse the target residual x₀ → xₜ using Gaussian noise ε.
+        3. Predict a target (x₀/ε/v) with the network.
+        4. Return the per‑pixel loss so callers can decide on the reduction.
         """
 
         # ---------------------------------------------------------------------------
@@ -214,19 +212,19 @@ class DiffusionModel(nn.Module):
         superres: bool = False,  # NOTE: currently unused – could toggle branch execution
         snapshots_i: torch.Tensor | None = None,
     ) -> torch.Tensor:
-        """Iterative *reverse* diffusion from *t = 1* → 0* ala DDPM/DDIM.
+        """Iterative reverse diffusion from t = 1 → 0 ala DDPM/DDIM.
 
         Args:
             n_sample: Number of samples to generate.
-            size: Output spatial size as *(C, H, W)*.
+            size: Output spatial size as (C, H, W).
             conditioning_snapshots: Low‑resolution conditioning frames.
             fluid_condition: Auxiliary physical fields (e.g. velocity, vorticity).
             device: Device to run on (default: "cuda").
             superres: Placeholder flag – not yet used.
-            snapshots_i: Optional initial noise tensor; if *None* a fresh *x_T* is drawn.
+            snapshots_i: Optional initial noise tensor; if None a fresh x_T is drawn.
 
         Returns:
-            A tensor of shape *(n_sample, C, H, W)* containing the generated snapshots.
+            A tensor of shape (n_sample, C, H, W) containing the generated snapshots.
         """
 
         # -----------------------------------------------------------------------
